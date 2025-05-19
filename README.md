@@ -70,3 +70,32 @@ Design test cases to evaluate chatbot behavior:
 * Use function calling with OpenAI or tool-agent loop with open models
 * Add unit tests and evaluation reports
 * Include policy updates dynamically (e.g., from a JSON config)
+
+
+
+Mistral: This open-source model has demonstrated function-calling capabilities, allowing developers to define custom functions that the model can invoke during inference.
+
+Evaluate using 5–10 controlled test cases to confirm proper reasoning
+
+
+LLM mdoels:
+
+* Phi-2	
+* TinyLlama
+* Gemma 2B	
+* Mistral 7B (will be slow in CPU)
+
+## Create virtualenv end install libraries
+```
+virtualenv venv
+python3 -m venv venv
+source venv/bin/activate
+pip3 install -r requirements.txt
+``` 
+
+## Huggingface login
+To login to huggingface and start using iy, execute the following command:
+```
+huggingface-cli login
+```
+and then paste your huggingface token 
