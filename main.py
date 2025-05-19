@@ -5,55 +5,30 @@ import sqlite3
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 import uvicorn
-
 app = FastAPI()
 
-# Load Phi-2 model (CPU-based)
-# import os
-# os.environ["HUGGINGFACE_HUB_TOKEN"] =''
-# from huggingface_hub import whoami
-# print(whoami())
+tokenizer = None
+model = None
 
-# from huggingface_hub import HfApi
-# api = HfApi()
-# api.model_info("microsoft/phi-2")
+# Load model on startup
+@app.on_event("startup")
+def load_phi_model():
+    global tokenizer, model
+    print("Loading Phi-1_5 model and tokenizer...")
+    tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-1_5")
+    model = AutoModelForCausalLM.from_pretrained("microsoft/phi-1_5")
+    model.eval()
+    if torch.cuda.is_available():
+        model = model.cuda()
+    print("Model loaded successfully.")
 
-# tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-2")
-# tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-# model = AutoModelForCausalLM.from_pretrained("microsoft/phi-2")
-# model.resize_token_embeddings(len(tokenizer))
+    if torch.cuda.is_available():
+        model = model.cuda()
 
-
-from transformers import AutoTokenizer, AutoModelForCausalLM
-
-model_id = "microsoft/phi-1_5"  # Open-access
-HUGGINGFACE_TOKEN = "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"
-tokenizer = AutoTokenizer.from_pretrained(model_id, token=HUGGINGFACE_TOKEN, force_download=True)
-model = AutoModelForCausalLM.from_pretrained(model_id, token=HUGGINGFACE_TOKEN, force_download=True)
-
-
-HUGGINGFACE_TOKEN = "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"
-
-model_id = "microsoft/phi-2"
-
-tokenizer = AutoTokenizer.from_pretrained(model_id, token=HUGGINGFACE_TOKEN)
-model = AutoModelForCausalLM.from_pretrained(model_id, token=HUGGINGFACE_TOKEN)
-
-
-from transformers import AutoTokenizer, AutoModelForCausalLM
-
-model_id = "microsoft/phi-2"
-
-tokenizer = AutoTokenizer.from_pretrained(model_id, use_auth_token=True)
-model = AutoModelForCausalLM.from_pretrained(model_id, use_auth_token=True)
-
-
-
-
-model.eval()
-
-if torch.cuda.is_available():
-    model = model.cuda()
+    # Init DB
+    print("Initializing database...")
+    init_db()
+    print("Database ready.")
 
 # DB setup
 def init_db():
@@ -70,7 +45,6 @@ def init_db():
     conn.commit()
     conn.close()
 
-init_db()
 
 # Request model
 class UserMessage(BaseModel):
@@ -107,14 +81,16 @@ def cancel_order(order_id: int):
     conn.close()
     raise HTTPException(status_code=404, detail="Order not found")
 
-# Helper: Generate model output
+
 def generate_response(prompt: str) -> str:
+    global tokenizer, model
     inputs = tokenizer(prompt, return_tensors="pt")
     if torch.cuda.is_available():
         inputs = {k: v.cuda() for k, v in inputs.items()}
     with torch.no_grad():
         outputs = model.generate(**inputs, max_new_tokens=100)
     return tokenizer.decode(outputs[0], skip_special_tokens=True)
+
 
 # Main chatbot entry point
 @app.post("/chat")
@@ -133,4 +109,4 @@ Assistant:
 
 # For local debugging
 if __name__ == "__main__":
-    uvicorn.run("serving-intermediate-models:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=8888, reload=True)

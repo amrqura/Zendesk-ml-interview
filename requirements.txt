@@ -4,7 +4,8 @@ transformers==4.40.1
 torch==2.2.2      # CPU-only version;
 #torch==2.2.2+cu118 for GPU if needed
 pydantic==2.7.1
-sqlite-utils==3.36  # Optional helper if you expand DB ops
-uvicorn>=0.27.1
-huggingface_hub
-numpy<2
+sqlite-utils==3.36
+uvicorn==0.29.0
+huggingface_hub==0.31.2
+numpy==1.26.4
+safetensors
