@@ -11,6 +11,14 @@ User Input ➜ [Chatbot Engine] ➜ [LLM + Tool Router] ➜ [Tool Execution Laye
 * Policies: Hardcoded logic, passed as context or few-shot examples
 * Frontend: Streamlit
 
+# Downloading the model offline
+In order to download the mistralai model into your computer, you can execute the following commands:
+```
+huggingface-cli login
+huggingface-cli download mistralai/Mistral-7B-Instruct-v0.2 --local-dir ./models/mistral --local-dir-use-symlinks False
+
+```
+
 ## API 
 
 We have two end points:
@@ -20,20 +28,38 @@ Business logic: Only cancel if order_date < 10 days ago
 
 ```
 curl -X 'POST' \
- 'http://127.0.0.1:8000/cancel_order' \
+ 'http://127.0.0.1:8888/cancel_order' \
  -H 'accept: application/json' \
  -H 'Content-Type: application/json' \
  -d '{
-  "order_id": "12345",
-  "order_date": "2024-04-01"
+  "order_id": "1"
 }'
 ```
 
 ### Order tracking 
 
 ```
-curl -X 'GET' \
- 'http://127.0.0.1:8000/track_order?order_id=12345'
+curl -X POST "http://127.0.0.1:8888/track_order" \
+     -H "Content-Type: application/json" \
+     -d '{"order_id": 1}'
+
+```
+
+### Chat with LLM
+* here is an example for sending a request to LLM to cancel an order
+```
+curl -X POST "http://127.0.0.1:8888/chat" \
+     -H "Content-Type: application/json" \
+     -d '{"message": "Can you cancel order 1 for me?"}'
+
+```
+
+* here is an example for sending a request to LLM to track an order
+```
+curl -X POST "http://127.0.0.1:8888/chat" \
+     -H "Content-Type: application/json" \
+     -d '{"message": "Can you track order 1 for me?"}'
+
 ```
 
 # LLM Prompting and Tool Use

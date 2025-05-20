@@ -8,4 +8,8 @@ sqlite-utils==3.36
 uvicorn==0.29.0
 huggingface_hub==0.31.2
 numpy==1.26.4
-safetensors
+safetensors==0.5.3
+langchain==0.2.17
+accelerate==1.7.0
+openai==1.79.0
+
