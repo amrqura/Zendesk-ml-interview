@@ -10,7 +10,6 @@ from models.OrderRequest import OrderRequest
 from models.UserMessage import UserMessage
 import json
 
-print(os.getenv("OPENAI_API_KEY"))
 openai.api_key = os.getenv("OPENAI_API_KEY")
 app = FastAPI()
 
@@ -58,8 +57,6 @@ def prepare_db():
     print("Initializing database...")
     init_db()
     print("Database ready.")
-
-
 
 
 def insert_random_orders(cur):

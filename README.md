@@ -124,4 +124,10 @@ To login to huggingface and start using iy, execute the following command:
 ```
 huggingface-cli login
 ```
-and then paste your huggingface token 
+and then paste your huggingface token
+
+## Unit test
+```
+export OPENAI_API_KEY='sk-...' # put your openapi key
+pytest test_app.py -v
+```
