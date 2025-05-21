@@ -32,7 +32,7 @@ pip3 install -r requirements.txt
 
 ## Tech stack
 * LLM: Open source LLM for security reasons, or closed source like chatgpt for easy integration
-* Framework: LangChain (ideal for tool use + memory + reasoning)
+* Framework: LangChain 
 * APIs: Simulate with FastAPI endpoints
 * Policies: Hardcoded logic, the current logic is that customer can't cancel order older than 10 days ago
 
@@ -44,7 +44,7 @@ Here is the project structure:
 * `openai_model.py`: contains a code to integrate the chatbot with chatgpt and function calling tools
 * `phi_model.py`: contains a code to load `phi-1.5` with prompt engineering to call function
 * `phi_model2.py` contains a code to load `phi-1.5` with function call
-* `test_app.py` contains a test case to test several scenarios including sending requests to track order, cancel orders and evaluate the performance of the model. since `phi` model was hallucinate a lot, the test cases in this file was against the openai integration
+* `test_app.py` contains the experiment  test cases to test several scenarios including sending requests to track order, cancel orders and evaluate the performance of the model. since `phi` model was hallucinate a lot, the test cases in this file was against the openai integration
 
 
 ## API 
@@ -83,7 +83,11 @@ curl -X POST "http://127.0.0.1:8888/chat" \
      -d '{"message": "Can you cancel order 1 for me?"}'
 
 ```
+The response will be something like:
 
+```
+{"reasoning":"I will now check the status of your order with ID 5 to see what might be causing the delay. Please hold on for a moment while I retrieve the information.","function_call":"track_order","arguments":{"order_id":5},"result":{"order_id":5,"status":"shipped","order_date":"2025-05-16"}}
+```
 * Chatting with the chatbot asking to `track` an order.
 ```
 curl -X POST "http://127.0.0.1:8888/chat" \
