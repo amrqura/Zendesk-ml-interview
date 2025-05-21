@@ -141,7 +141,7 @@ here is the command to run the test cases. you will need define `OPENAI_API_KEY`
 export OPENAI_API_KEY='sk-...' # put your openapi key
 pytest test_app.py -v -s
 ```
-
+you will see all test cases are running, idealy all of them should pass the test
 # Key Insights
 ## Chatbot Effectiveness
 * Successfully routes intent to correct backend logic (track_order, cancel_order)
