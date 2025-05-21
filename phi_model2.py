@@ -49,14 +49,6 @@ def load_phi_model_and_prepare_db():
         )
     ]
 
-    # agent = initialize_agent(
-    #     tools,
-    #     llm,
-    #     agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-    #     verbose=True,
-    #     handle_parsing_errors=True,
-    #     max_iterations=1,
-    # )
 
     agent = initialize_agent(
         tools,

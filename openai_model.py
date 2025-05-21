@@ -9,47 +9,11 @@ import openai
 from models.OrderRequest import OrderRequest
 from models.UserMessage import UserMessage
 import json
+from openai_utls import function_specs
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 app = FastAPI()
 
-
-function_specs = [
-    {
-        "name": "track_order",
-        "description": (
-            "Use this function only if the user is asking to *check*, *view*, or *track* the status of an order. "
-            "Do not use this if they want to cancel or modify the order."
-        ),
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "order_id": {
-                    "type": "integer",
-                    "description": "The ID of the order to track"
-                }
-            },
-            "required": ["order_id"]
-        }
-    },
-    {
-        "name": "cancel_order",
-        "description": (
-            "Use this function only if the user is asking to *cancel* or *remove* an order. "
-            "Only call this if the user explicitly wants to cancel."
-        ),
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "order_id": {
-                    "type": "integer",
-                    "description": "The ID of the order to cancel"
-                }
-            },
-            "required": ["order_id"]
-        }
-    }
-]
 
 
 @app.on_event("startup")
@@ -174,6 +138,11 @@ def ask_openai_with_function_call(user_message: str):
 
 @app.post("/chat")
 def chat(user_input: UserMessage):
+    """
+    This is the main entry point to chat with the chatbot
+    :param user_input:
+    :return:
+    """
     try:
         result = ask_openai_with_function_call(user_input.message)
         return result
