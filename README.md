@@ -147,9 +147,18 @@ here are the metrics that we will test
 ## Performance
 * All test cases complete in under 1 minute, with real LLM interaction
 * Latency remains stable across multiple query types
-## Politeness / UX
+## Politeness
 * GPT-4 confirms that chatbot responses are polite and user-friendly
 * Response tone aligns with a professional assistant persona
+## multi-step  handling
+* The system failed at the moment to handle multi steps like "track -> cancel". so when I use this curl:
+```
+curl -X POST "http://127.0.0.1:8888/chat"      -H "Content-Type: application/json"      -d '{"message": "Can you check the status of order 1 and cancel it if possible?"}
+```
+It only shows to me the `track_order` function is called:
+```
+{"reasoning":"First, I'll check the status of order 1 to understand its current status. This will help us determine if it's possible to cancel the order. Let me do that now.","function_call":"track_order","arguments":{"order_id":1},"result":{"order_id":1,"status":"pending","order_date":"2025-05-10"}}
+```
 
 
 
