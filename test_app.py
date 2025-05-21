@@ -40,7 +40,13 @@ def setup_module(module):
     setup_test_db()
     os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
+# quantitative evaluation
+
 def test_chat_live_llm_track():
+    """
+    Test that the chatbot will call track_order function
+    :return:
+    """
     client = TestClient(app)
     response = client.post("/chat", json={"message": "Can you track order 1?"})
     assert response.status_code == 200
@@ -49,6 +55,10 @@ def test_chat_live_llm_track():
 
 
 def test_chat_live_llm_track_shipped():
+    """
+    Test that the chatbot will call track_order function
+    :return:
+    """
     client = TestClient(app)
     response = client.post("/chat", json={"message": "Can you track order 2?"})
     assert response.status_code == 200
@@ -57,6 +67,10 @@ def test_chat_live_llm_track_shipped():
 
 
 def test_chat_live_llm_cancel_invalid():
+    """
+    Test that the chatbot will call cancel_order function and that failed will be in status
+    :return:
+    """
     client = TestClient(app)
     response = client.post("/chat", json={"message": "Can you cancel order 2?"})
     assert response.status_code == 200
@@ -65,6 +79,10 @@ def test_chat_live_llm_cancel_invalid():
 
 
 def test_chat_live_llm_cancel_valid():
+    """
+    Test that the chatbot will call cancel_order function and that success will be in status
+    :return:
+    """
     client = TestClient(app)
     response = client.post("/chat", json={"message": "Can you cancel order 1?"})
     assert response.status_code == 200
@@ -72,4 +90,40 @@ def test_chat_live_llm_cancel_valid():
     assert "success" == response.json()["result"]["status"].lower()
 
 
+# qualitative evaluation
+def score_politeness(text: str) -> bool:
+    """
+    call another LLM with the response and make sure it is polite enough
+    :param text:
+    :return:
+    """
+    prompt = f"""Rate the following response for politeness on a scale from 1 (rude) to 5 (very polite). Return only the number.
+
+    Response:
+    {text}
+    """
+    from openai import OpenAI
+
+    client2 = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+    result = client2.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    score = int(result.choices[0].message.content.strip())
+    return score >= 4
+
+
+def test_chat_response_is_polite():
+    """
+    This test to make sure that the response that is returning from the chatbot is polite
+    in order to make sure that is polite enough, We will send the response to another LLM
+    and make sure that the score of politness is high
+    :return:
+    """
+    client = TestClient(app)
+    response = client.post("/chat", json={"message": "Can you track order 1?"})
+    assert response.status_code == 200
+    reasoning = response.json().get("reasoning", "").lower()
+    assert score_politeness(reasoning), "Response not polite enough"
 

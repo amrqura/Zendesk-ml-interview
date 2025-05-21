@@ -124,10 +124,8 @@ and then paste your huggingface token
 # Experiment Design
 Design test cases to evaluate chatbot behavior:
 
-### Functional Tests
-* Test valid cancellation (e.g., 5-day-old order)
-* Test invalid cancellation (e.g., 20-day-old order)
-* Test tracking requests
+* `test_app.py` is the test cases that handles testing quantitative and/or qualitative metrics 
+here are the metrics that we will test
 
 ### Metrics
 * Accuracy of policy enforcement
