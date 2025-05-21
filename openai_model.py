@@ -9,7 +9,7 @@ import openai
 from models.OrderRequest import OrderRequest
 from models.UserMessage import UserMessage
 import json
-from openai_utls import function_specs
+from openai_utils import function_specs
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 app = FastAPI()
@@ -39,7 +39,8 @@ def insert_random_orders(cur):
             """, (name, order_date, status))
 # DB setup
 def init_db():
-    conn = sqlite3.connect("orders.db")
+    DB_PATH = os.getenv("DB_PATH", "orders.db")
+    conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS orders")
     cur.execute("""
@@ -50,7 +51,8 @@ def init_db():
         status TEXT
     )
     """)
-    insert_random_orders(cur)
+    print("drop and recreated")
+    # insert_random_orders(cur)
     conn.commit()
     conn.close()
 
@@ -59,7 +61,8 @@ def init_db():
 @app.post("/track_order")
 def track_order(request: OrderRequest):
     order_id = request.order_id
-    conn = sqlite3.connect("orders.db")
+    DB_PATH = os.getenv("DB_PATH", "orders.db")
+    conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.execute("SELECT id, order_date, status FROM orders WHERE id=?", (order_id,))
     row = cur.fetchone()
@@ -72,7 +75,8 @@ def track_order(request: OrderRequest):
 @app.post("/cancel_order")
 def cancel_order(request:OrderRequest):
     order_id = request.order_id
-    conn = sqlite3.connect("orders.db")
+    DB_PATH = os.getenv("DB_PATH", "orders.db")
+    conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.execute("SELECT order_date, status FROM orders WHERE id=?", (order_id,))
     row = cur.fetchone()

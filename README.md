@@ -96,7 +96,7 @@ curl -X POST "http://127.0.0.1:8888/chat" \
 here is the command to run the test cases. you will need define `OPENAI_API_KEY` as enviroment variable
 ```
 export OPENAI_API_KEY='sk-...' # put your openapi key
-pytest test_app.py -v
+pytest test_app.py -v -s
 ```
 
 ## Running the phi model
