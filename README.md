@@ -103,12 +103,6 @@ The response will be something like this:
 {"reasoning":"I will check the status of order number 5 for you to give you an update on its progress. Let's see where it stands now.","function_call":"track_order","arguments":{"order_id":5},"result":{"order_id":5,"status":"cancelled","order_date":"2025-05-05"}}
 ```
 
-## Unit test
-here is the command to run the test cases. you will need define `OPENAI_API_KEY` as enviroment variable
-```
-export OPENAI_API_KEY='sk-...' # put your openapi key
-pytest test_app.py -v -s
-```
 
 ## Running the phi model
 if you want to run phi model(it is hallucinate, but you will be able to see the reasoning), you will need to do the following steps:
@@ -126,7 +120,7 @@ huggingface-cli login
 and then paste your huggingface token
 
 # Experiment Design
-Design test cases to evaluate chatbot behavior:
+I have written several  test cases to evaluate chatbot behavior:
 
 * `test_app.py` is the test cases that handles testing quantitative and/or qualitative metrics 
 here are the metrics that we will test
@@ -139,8 +133,14 @@ here are the metrics that we will test
 
 ### Qualitative Evaluation
 * Is the tone polite?
-* Are error cases handled gracefully?
 * Does the bot explain policy reasons well?
+
+### How to run the experiment test cases
+here is the command to run the test cases. you will need define `OPENAI_API_KEY` as env variable
+```
+export OPENAI_API_KEY='sk-...' # put your openapi key
+pytest test_app.py -v -s
+```
 
 # Key Insights
 ## Chatbot Effectiveness
