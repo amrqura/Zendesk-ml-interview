@@ -64,4 +64,12 @@ def test_chat_live_llm_cancel_invalid():
     assert "failed" == response.json()["result"]["status"].lower()
 
 
+def test_chat_live_llm_cancel_valid():
+    client = TestClient(app)
+    response = client.post("/chat", json={"message": "Can you cancel order 1?"})
+    assert response.status_code == 200
+    assert "cancel_order" in response.json()["function_call"]
+    assert "success" == response.json()["result"]["status"].lower()
+
+
 

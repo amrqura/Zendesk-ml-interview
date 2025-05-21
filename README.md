@@ -88,8 +88,15 @@ curl -X POST "http://127.0.0.1:8888/chat" \
 ```
 curl -X POST "http://127.0.0.1:8888/chat" \
      -H "Content-Type: application/json" \
-     -d '{"message": "Can you track order 1 for me?"}'
+     -d '{"message": "I have an order that i am waiting since long time, Can you track order 5 for me?"}'
 
+
+```
+
+The response will be something like this:
+
+```
+{"reasoning":"I will check the status of order number 5 for you to give you an update on its progress. Let's see where it stands now.","function_call":"track_order","arguments":{"order_id":5},"result":{"order_id":5,"status":"cancelled","order_date":"2025-05-05"}}
 ```
 
 ## Unit test

@@ -51,8 +51,7 @@ def init_db():
         status TEXT
     )
     """)
-    print("drop and recreated")
-    # insert_random_orders(cur)
+    insert_random_orders(cur)
     conn.commit()
     conn.close()
 
@@ -98,7 +97,8 @@ def ask_openai_with_function_call(user_message: str):
     messages = [
         {"role": "system", "content": (
             "You are a helpful assistant that manages order tracking and cancellation. "
-            "Think step by step, and call a function only if needed."
+            "Think step by step and explain your reasoning before calling a function. "
+            "For example, say what you're doing and why — then use the appropriate function call."
         )},
         {"role": "user", "content": user_message}
     ]
