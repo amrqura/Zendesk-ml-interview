@@ -163,6 +163,7 @@ It only shows to me the `track_order` function is called:
 ```
 {"reasoning":"First, I'll check the status of order 1 to understand its current status. This will help us determine if it's possible to cancel the order. Let me do that now.","function_call":"track_order","arguments":{"order_id":1},"result":{"order_id":1,"status":"pending","order_date":"2025-05-10"}}
 ```
+so gpt-4 can only support a single function call per response and cannot chain function calls
 
 
 
