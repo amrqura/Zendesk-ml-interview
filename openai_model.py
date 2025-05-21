@@ -25,7 +25,7 @@ def prepare_db():
 
 def insert_random_orders(cur):
     sample_names = ["Alice", "Bob", "Charlie", "Diana", "Eve", "Frank", "Grace", "Hassan", "Ivy", "Jack"]
-    status_options = ["pending", "shipped", "cancelled"]
+    status_options = ["pending", "shipped"]
 
     for _ in range(random.randint(5, 10)):
         name = random.choice(sample_names)
@@ -88,7 +88,7 @@ def cancel_order(request:OrderRequest):
             return {"status": "success", "message": "Order cancelled"}
         else:
             conn.close()
-            return {"status": "failed", "message": "Cancellation window expired"}
+            return {"status": "failed", "message": "Dear customer, We can not proceede with your request as cancellation window expired, you can not cancel an order older than 10 days"}
     conn.close()
     raise HTTPException(status_code=404, detail="Order not found")
 

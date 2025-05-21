@@ -128,7 +128,7 @@ Design test cases to evaluate chatbot behavior:
 here are the metrics that we will test
 
 ### Metrics
-* Accuracy of policy enforcement
+* Accuracy of policy enforcement (test case for invalid cancellation)
 * Correctness of tool execution
 * Latency of response
 * Step-tracing: Whether reasoning steps are followed correctly
@@ -138,7 +138,19 @@ here are the metrics that we will test
 * Are error cases handled gracefully?
 * Does the bot explain policy reasons well?
 
+# Key Insights
+## Chatbot Effectiveness
+* Successfully routes intent to correct backend logic (track_order, cancel_order)
+* Handles edge cases such as expired orders with proper messaging
+* Responds with correct status and helpful explanations
 
-Evaluate using 5–10 controlled test cases to confirm proper reasoning
+## Performance
+* All test cases complete in under 1 minute, with real LLM interaction
+* Latency remains stable across multiple query types
+## Politeness / UX
+* GPT-4 confirms that chatbot responses are polite and user-friendly
+* Response tone aligns with a professional assistant persona
+
+
 
 

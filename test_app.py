@@ -3,6 +3,7 @@ import os
 import sqlite3
 from fastapi.testclient import TestClient
 from datetime import datetime, timedelta
+import time
 
 os.environ["DB_PATH"] = "test_orders.db"
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
@@ -127,3 +128,34 @@ def test_chat_response_is_polite():
     reasoning = response.json().get("reasoning", "").lower()
     assert score_politeness(reasoning), "Response not polite enough"
 
+
+def test_chat_execution_time_under_1_minute():
+    """
+    Make sure that the chatbot respond within one minute
+    :return:
+    """
+    client = TestClient(app)
+    start_time = time.time()
+
+    response = client.post("/chat", json={"message": "Can you cancel order 1?"})
+
+    end_time = time.time()
+    duration = end_time - start_time
+
+    print(f"Execution time: {duration:.2f} seconds")
+
+    assert response.status_code == 200
+    assert duration < 60, "Chat response took longer than 1 minute"
+
+
+def test_chat_live_llm_cancel_invalid_with_proper_reasoning():
+    """
+    Test that the chatbot will call cancel_order function ,failed will be in status and there is clear message
+    :return:
+    """
+    client = TestClient(app)
+    response = client.post("/chat", json={"message": "Can you cancel order 2?"})
+    assert response.status_code == 200
+    assert "cancel_order" in response.json()["function_call"]
+    assert "failed" == response.json()["result"]["status"].lower()
+    assert "cancellation window" in response.json()["result"]["message"].lower()
